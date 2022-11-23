@@ -1,4 +1,12 @@
+import axios from "axios";
 import { useRef, useState, useEffect, useCallback } from "react";
+
+const apiClient = axios.create({
+  baseURL: "http://jsonplaceholder.typicode.com/",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
 type Address = {
   street: string;
@@ -26,7 +34,6 @@ type User = {
 
 const NUM_PER_PAGE = 2;
 
-const PLACEHOLDERAPI = `https:/jsonplaceholder.typicode.com/users`;
 const Gender: string[] = ["male", "female"];
 
 const imageUrl = (name: string): string => {
@@ -43,10 +50,15 @@ const Avatars = () => {
 
   const loadInitialData = useCallback((p: number) => {
     setLoading(true);
-    fetch(`${PLACEHOLDERAPI}?_start=${p * NUM_PER_PAGE}&_limit=${NUM_PER_PAGE}`)
-      .then((res) => res.json())
-      .then((data: User[]) => {
-        const modifiedList = data.map((d) => ({
+    apiClient
+      .get<User[]>("users", {
+        params: {
+          _start: p * NUM_PER_PAGE,
+          _limit: NUM_PER_PAGE,
+        },
+      })
+      .then((resp) => {
+        const modifiedList = resp.data.map((d) => ({
           ...d,
           img: imageUrl(d.name),
         }));
