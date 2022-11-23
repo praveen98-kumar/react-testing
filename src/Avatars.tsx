@@ -2,7 +2,7 @@ import axios from "axios";
 import { useRef, useState, useEffect, useCallback } from "react";
 
 const apiClient = axios.create({
-  baseURL: "http://jsonplaceholder.typicode.com/",
+  baseURL: "https://jsonplaceholder.typicode.com/",
   headers: {
     "Content-Type": "application/json",
   },
